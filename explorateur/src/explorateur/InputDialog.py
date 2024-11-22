@@ -9,7 +9,7 @@ import re
 from PyQt6 import QtCore, QtWidgets
 
 
-class Ui_Dialog(QtWidgets.QDialog):
+class Ui_InputDialog(QtWidgets.QDialog):
     def __init__(self, interface, dialogType):
         super().__init__()
 
@@ -39,7 +39,8 @@ class Ui_Dialog(QtWidgets.QDialog):
             case "changeRepertoire":
                 self.setWindowTitle(_translate("Dialog", "Changer de répertoire"))
                 self.lineEdit.setText(_translate("Dialog", str(self.interface.explorateur.path)))
-                self.lineEdit.setPlaceholderText(_translate("Dialog", "Entrez le répertoire auquel vous souhaitez accéder"))
+                self.lineEdit.setPlaceholderText(
+                    _translate("Dialog", "Entrez le répertoire auquel vous souhaitez accéder"))
             case "renommer":
                 self.setWindowTitle(_translate("Dialog", "Renommer un élément"))
                 self.lineEdit.setText(_translate("Dialog", str(self.interface.explorateur.get_selected_file()[1])))
@@ -57,7 +58,6 @@ class Ui_Dialog(QtWidgets.QDialog):
 
         self.pushButton.setText(_translate("Dialog", "Entrer"))
 
-
     def entrer(self):
         if self.dialogType == "renommer":
             self.interface.explorateur.rename_file(self.lineEdit.text())
@@ -68,8 +68,10 @@ class Ui_Dialog(QtWidgets.QDialog):
                 if not os.path.exists(file_dest):
                     open(file_dest, "x")
                 else:
+                    self.interface.erreur("Un fichier portant le même nom existe déjà")
                     return
             else:
+                self.interface.erreur("Seul les charactères -_.a-zA-Z0-9 peuvent être utilisé\ndans le nom du fichier")
                 return
 
         elif self.dialogType == "creerDossier":
@@ -78,12 +80,15 @@ class Ui_Dialog(QtWidgets.QDialog):
                 if not os.path.exists(path_dest):
                     os.makedirs(path_dest)
                 else:
+                    self.interface.erreur("Un dossier portant le même nom existe déjà")
                     return
             else:
+                self.interface.erreur("Seul les charactères -_a-zA-Z0-9 peuvent être utilisé\ndans le nom du dossier")
                 return
 
         elif self.dialogType == "changeRepertoire":
             if not os.path.exists(self.lineEdit.text()):
+                self.interface.erreur("Le répertoire n'existe pas")
                 return
             self.interface.explorateur.set_path(self.lineEdit.text())
 
@@ -91,7 +96,8 @@ class Ui_Dialog(QtWidgets.QDialog):
                 self.interface.explorateur.historique.append(str(self.lineEdit.text()))
                 self.interface.explorateur.index_historique = len(self.interface.explorateur.historique) - 1
             else:
-                self.interface.explorateur.historique = self.interface.explorateur.historique[:self.interface.explorateur.index_historique + 1]
+                self.interface.explorateur.historique = self.interface.explorateur.historique[
+                                                        :self.interface.explorateur.index_historique + 1]
                 self.interface.explorateur.historique.append(str(self.lineEdit.text()))
                 self.interface.explorateur.index_historique = len(self.interface.explorateur.historique) - 1
 

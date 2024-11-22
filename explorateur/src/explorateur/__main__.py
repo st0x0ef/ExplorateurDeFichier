@@ -1,7 +1,7 @@
 import sys
-import Explorateur
+from explorateur.Explorateur import explorateur
 from PyQt6.QtWidgets import QApplication, QMainWindow
-from Interface import Ui_MainWindow
+from explorateur.Interface import Ui_MainWindow
 
 
 class Window(QMainWindow, Ui_MainWindow):
@@ -12,7 +12,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    explorateur = Explorateur.explorateur()
+    explorateur = explorateur()
     win = Window(explorateur)
     win.show()
     sys.exit(app.exec())

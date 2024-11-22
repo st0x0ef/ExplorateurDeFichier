@@ -3,6 +3,7 @@ import time
 import subprocess
 from pathlib import Path
 import shutil
+import magic
 
 
 def find_size_in_good_unit(octets: int) -> tuple:
@@ -41,6 +42,25 @@ def convert_number_to_octet(nb: float, unit: int) -> float:
     return nb
 
 
+def find_file_type(path_entry: str) -> str:
+    type_file = magic.from_file(path_entry, mime=True)
+
+    if type_file == "text/plain":
+        type_file = "Document texte"
+    elif type_file == "application/pdf":
+        type_file = "Document PDF"
+    elif type_file == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+        type_file = "Document Word"
+
+    type_file = type_file.replace("application/", "")
+    type_file = type_file.replace("image/", "")
+    type_file = type_file.replace("text/", "")
+
+    type_file = type_file.capitalize()
+
+    return type_file
+
+
 class explorateur:
     def __init__(self):
         self.fichiers = []
@@ -62,14 +82,16 @@ class explorateur:
                                               time.ctime(os.path.getctime(entry.path)), entry.path])
                     else:
                         self.fichiers.append(
-                            [i, entry.name, find_size_in_good_unit(os.path.getsize(entry.path)), "Document",
-                             time.ctime(os.path.getmtime(entry.path)), time.ctime(os.path.getctime(entry.path)), entry.path])
+                            [i, entry.name, find_size_in_good_unit(os.path.getsize(entry.path)),
+                             find_file_type(str(entry.path)),
+                             time.ctime(os.path.getmtime(entry.path)), time.ctime(os.path.getctime(entry.path)),
+                             entry.path])
                     i += 1
 
     def get_files(self) -> []:
         return self.fichiers
 
-    def select_file(self, index:int):
+    def select_file(self, index: int):
         self.index_fichier_selectionner = index
 
     def open_selected_folder(self):
@@ -94,12 +116,12 @@ class explorateur:
 
     def open_selected_element(self):
         if self.index_fichier_selectionner >= 0:
-            if self.fichiers[self.index_fichier_selectionner][3] == "Document":
-                self.open_selected_file()
-                return False
-            else:
+            if self.fichiers[self.index_fichier_selectionner][3] == "Dossier":
                 self.open_selected_folder()
                 return True
+            else:
+                self.open_selected_file()
+                return False
 
     def delete_file(self):
         if self.index_fichier_selectionner >= 0:
@@ -110,7 +132,7 @@ class explorateur:
 
             self.fichiers.pop(self.index_fichier_selectionner)
 
-    def set_path(self, path:str):
+    def set_path(self, path: str):
         self.path = path
 
     def get_path(self):
@@ -126,7 +148,7 @@ class explorateur:
             self.index_historique += 1
             self.set_path(self.historique[self.index_historique])
 
-    def rename_file(self, new_name:str):
+    def rename_file(self, new_name: str):
         if self.index_fichier_selectionner >= 0:
             os.rename(self.fichiers[self.index_fichier_selectionner][6], str(self.path) + "/" + new_name)
             self.fichiers[self.index_fichier_selectionner][1] = new_name
@@ -138,4 +160,7 @@ class explorateur:
                 shutil.make_archive(str(self.path) + "/" + self.fichiers[self.index_fichier_selectionner][1],
                                     type,
                                     root_dir=self.fichiers[self.index_fichier_selectionner][6])
+                return True
 
+            else:
+                return False
