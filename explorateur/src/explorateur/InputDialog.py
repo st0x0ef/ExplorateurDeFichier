@@ -20,7 +20,7 @@ class Ui_InputDialog(QtWidgets.QDialog):
 
         self.dialogType = dialogType
 
-        self.setWindowIcon(QtGui.QIcon('ressources/icon.png'))
+        self.setWindowIcon(QtGui.QIcon(os.path.join(os.path.dirname(__file__), "ressources", "icon.png")))
 
         self.setObjectName("Dialog")
         self.resize(400, 100)

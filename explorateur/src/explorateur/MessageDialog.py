@@ -7,14 +7,14 @@
 
 
 from PyQt6 import QtCore, QtGui, QtWidgets
-
+import os
 
 class Ui_MessageDialog(QtWidgets.QDialog):
     def __init__(self, message):
         super().__init__()
         self.setObjectName("MessageDialog")
         self.resize(400, 100)
-        self.setWindowIcon(QtGui.QIcon('ressources/icon.png'))
+        self.setWindowIcon(QtGui.QIcon(os.path.join(os.path.dirname(__file__), "ressources", "icon.png")))
 
         self.label = QtWidgets.QLabel(parent=self)
         self.label.setGeometry(QtCore.QRect(10, 5, 380, 60))
