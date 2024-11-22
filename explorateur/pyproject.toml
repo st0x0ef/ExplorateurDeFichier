@@ -2,7 +2,7 @@
 [tool.briefcase]
 project_name = "Explorateur de fichier"
 bundle = "com.st0x0ef"
-version = "0.0.1"
+version = "0.1.0"
 url = "https://github.com/st0x0ef/"
 license.file = "LICENSE"
 author = "Gabriel Gaudreault"
@@ -12,6 +12,7 @@ author_email = "gabriel.gaudreault3@gmail.com"
 formal_name = "Explorateur de fichier"
 description = "Explorateur de fichier pour linux"
 long_description = """Explorateur de fichier pour linux"""
+icon = "icon/folder"
 
 sources = [
     "src/explorateur"
@@ -22,8 +23,7 @@ test_sources = [
 
 requires = [
     "python-magic",
-    "PyQt6",
-    "toga"
+    "PyQt6"
 ]
 test_requires = [
     "pytest",

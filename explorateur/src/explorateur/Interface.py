@@ -21,6 +21,9 @@ class Ui_MainWindow(object):
 
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 600)
+
+        MainWindow.setWindowIcon(QtGui.QIcon('ressources/icon.png'))
+
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
