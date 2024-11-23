@@ -131,7 +131,7 @@ class Ui_MainWindow(object):
         self.actionRenommer.triggered.connect(self.renommer_element)
         self.actionOuvrir = QtGui.QAction(parent=MainWindow)
         self.actionOuvrir.setObjectName("actionOuvrir")
-        self.actionOuvrir.triggered.connect(self.explorateur.open_selected_element)
+        self.actionOuvrir.triggered.connect(self.open_selected_element)
         self.actionOuvrirTerminal = QtGui.QAction(parent=MainWindow)
         self.actionOuvrirTerminal.setObjectName("actionOuvrirTerminal")
         self.actionOuvrirTerminal.triggered.connect(self.explorateur.open_terminal)
@@ -345,3 +345,7 @@ class Ui_MainWindow(object):
             self.refresh()
         else:
             self.erreur("Seuls les dossiers peuvent être compressés")
+
+    def open_selected_element(self):
+        if self.explorateur.open_selected_element():
+            self.refresh()

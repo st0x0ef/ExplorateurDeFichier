@@ -18,6 +18,9 @@ class keyboard:
                 if i != self.explorateur.index_fichier_selectionner:
                     self.interface.unselectIndex(i)
 
+        elif key == QtCore.Qt.Key.Key_Return:
+            self.interface.open_selected_element()
+
 
 class App(QtWidgets.QApplication):
     def __init__(self, argv):
