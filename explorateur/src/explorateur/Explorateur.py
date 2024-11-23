@@ -169,6 +169,8 @@ class explorateur:
         if self.index_fichier_selectionner >= 0:
             if self.fichiers[self.index_fichier_selectionner][3] == "Dossier":
                 os.system("gnome-terminal --working-directory=" + str(self.fichiers[self.index_fichier_selectionner][6]))
-                return True
+
             else:
-                return False
+                os.system("gnome-terminal --working-directory=" + str(self.path))
+        else:
+            os.system("gnome-terminal --working-directory=" + str(self.path))

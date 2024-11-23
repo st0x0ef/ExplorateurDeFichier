@@ -131,7 +131,7 @@ class Ui_MainWindow(object):
         self.actionOuvrir.triggered.connect(self.explorateur.open_selected_element)
         self.actionOuvrirTerminal = QtGui.QAction(parent=MainWindow)
         self.actionOuvrirTerminal.setObjectName("actionOuvrirTerminal")
-        self.actionOuvrirTerminal.triggered.connect(self.open_terminal)
+        self.actionOuvrirTerminal.triggered.connect(self.explorateur.open_terminal)
         self.actionSupprimer = QtGui.QAction(parent=MainWindow)
         self.actionSupprimer.setObjectName("actionSupprimer")
         self.actionSupprimer.triggered.connect(self.delete_file)
@@ -334,7 +334,3 @@ class Ui_MainWindow(object):
             self.refresh()
         else:
             self.erreur("Seuls les dossiers peuvent être compressés")
-
-    def open_terminal(self):
-        if not self.explorateur.open_terminal():
-            self.erreur("Seuls les dossiers peuvent être ouvert dans un terminal")
