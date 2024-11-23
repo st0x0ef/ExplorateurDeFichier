@@ -21,6 +21,12 @@ class keyboard:
         elif key == QtCore.Qt.Key.Key_Return:
             self.interface.open_selected_element()
 
+        elif key == QtCore.Qt.Key.Key_Delete:
+            self.interface.delete_file()
+
+        elif key == QtCore.Qt.Key.Key_F2:
+            self.interface.renommer_element()
+
 
 class App(QtWidgets.QApplication):
     def __init__(self, argv):
