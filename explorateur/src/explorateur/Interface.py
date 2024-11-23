@@ -12,6 +12,8 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from explorateur.InputDialog import Ui_InputDialog
 from explorateur.MessageDialog import Ui_MessageDialog
 
+from explorateur.Application import keyboard
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow, app, explorateur):
@@ -19,6 +21,7 @@ class Ui_MainWindow(object):
         self.explorateur = explorateur
         self.widgets = []
         self.selected_widget = None
+        self.app.setEvent(keyboard(self, self.explorateur))
 
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 600)
@@ -276,11 +279,19 @@ class Ui_MainWindow(object):
         pos = round(event.scenePosition().y() + self.scrollArea.verticalScrollBar().value() - 80)
         for i in range(len(self.widgets)):
             if pos - 30 < self.widgets[i].y() < pos:
-                self.widgets[i].setStyleSheet('background-color: #8ceaff;')
-                self.explorateur.select_file(i)
-                self.selected_widget = self.widgets[i]
+                self.selectIndex(i)
             else:
-                self.widgets[i].setStyleSheet('background-color: none;')
+                self.unselectIndex(i)
+
+    def selectIndex(self, index: int):
+        if 0 <= index < len(self.widgets):
+            self.widgets[index].setStyleSheet('background-color: #8ceaff;')
+            self.explorateur.select_file(index)
+            self.selected_widget = self.widgets[index]
+
+    def unselectIndex(self, index: int):
+        if 0 <= index < len(self.widgets):
+            self.widgets[index].setStyleSheet('background-color: none;')
 
     def open(self):
         if self.explorateur.open_selected_element():
