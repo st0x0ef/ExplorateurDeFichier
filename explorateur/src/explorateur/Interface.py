@@ -129,6 +129,9 @@ class Ui_MainWindow(object):
         self.actionOuvrir = QtGui.QAction(parent=MainWindow)
         self.actionOuvrir.setObjectName("actionOuvrir")
         self.actionOuvrir.triggered.connect(self.explorateur.open_selected_element)
+        self.actionOuvrirTerminal = QtGui.QAction(parent=MainWindow)
+        self.actionOuvrirTerminal.setObjectName("actionOuvrirTerminal")
+        self.actionOuvrirTerminal.triggered.connect(self.open_terminal)
         self.actionSupprimer = QtGui.QAction(parent=MainWindow)
         self.actionSupprimer.setObjectName("actionSupprimer")
         self.actionSupprimer.triggered.connect(self.delete_file)
@@ -164,6 +167,7 @@ class Ui_MainWindow(object):
 
         self.menuFichier.addAction(self.actionRenommer)
         self.menuFichier.addAction(self.actionOuvrir)
+        self.menuFichier.addAction(self.actionOuvrirTerminal)
         self.menuFichier.addAction(self.actionSupprimer)
         self.menuFichier.addAction(self.actionCreerDocument)
         self.menuFichier.addAction(self.actionCreerDossier)
@@ -199,6 +203,7 @@ class Ui_MainWindow(object):
         self.menuHistorique.setTitle(_translate("MainWindow", "Historique"))
         self.actionRenommer.setText(_translate("MainWindow", "Renommer"))
         self.actionOuvrir.setText(_translate("MainWindow", "Ouvrir"))
+        self.actionOuvrirTerminal.setText(_translate("MainWindow", "Ouvrir dans un terminal"))
         self.actionSupprimer.setText(_translate("MainWindow", "Supprimer"))
         self.actionCreerDocument.setText(_translate("MainWindow", "Créer un document"))
         self.actionCreerDossier.setText(_translate("MainWindow", "Créer un dossier"))
@@ -329,3 +334,7 @@ class Ui_MainWindow(object):
             self.refresh()
         else:
             self.erreur("Seuls les dossiers peuvent être compressés")
+
+    def open_terminal(self):
+        if not self.explorateur.open_terminal():
+            self.erreur("Seuls les dossiers peuvent être ouvert dans un terminal")

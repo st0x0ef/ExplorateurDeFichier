@@ -164,3 +164,11 @@ class explorateur:
 
             else:
                 return False
+
+    def open_terminal(self):
+        if self.index_fichier_selectionner >= 0:
+            if self.fichiers[self.index_fichier_selectionner][3] == "Dossier":
+                os.system("gnome-terminal --working-directory=" + str(self.fichiers[self.index_fichier_selectionner][6]))
+                return True
+            else:
+                return False

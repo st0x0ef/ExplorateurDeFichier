@@ -9,6 +9,7 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
 import os
 
+
 class Ui_MessageDialog(QtWidgets.QDialog):
     def __init__(self, message):
         super().__init__()
@@ -34,4 +35,3 @@ class Ui_MessageDialog(QtWidgets.QDialog):
         _translate = QtCore.QCoreApplication.translate
         self.setWindowTitle(_translate("MessageDialog", "Erreur"))
         self.pushButton.setText(_translate("MessageDialog", "Continuer"))
-
