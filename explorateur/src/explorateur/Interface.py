@@ -8,6 +8,7 @@
 import sys
 import os
 from PyQt6 import QtCore, QtGui, QtWidgets
+from pathlib import Path
 
 from explorateur.InputDialog import Ui_InputDialog
 from explorateur.MessageDialog import Ui_MessageDialog
@@ -150,19 +151,6 @@ class Ui_MainWindow(object):
         self.actionCompresserTar = QtGui.QAction(parent=MainWindow)
         self.actionCompresserTar.setObjectName("actionCompresserTar")
         self.actionCompresserTar.triggered.connect(self.action_compresser_tar)
-        self.actionViderCorbeil = QtGui.QAction(parent=MainWindow)
-        self.actionViderCorbeil.setObjectName("actionViderCorbeil")
-        self.actionViderCorbeil.triggered.connect(self.clear_trash)
-
-        self.actionChangerRepertoire = QtGui.QAction(parent=MainWindow)
-        self.actionChangerRepertoire.setObjectName("actionChangerRepertoire")
-        self.actionChangerRepertoire.triggered.connect(self.changer_repertoire)
-        self.actionRecharger = QtGui.QAction(parent=MainWindow)
-        self.actionRecharger.setObjectName("actionRecharger")
-        self.actionRecharger.triggered.connect(self.refresh)
-        self.actionQuitter = QtGui.QAction(parent=MainWindow)
-        self.actionQuitter.setObjectName("actionQuitter")
-        self.actionQuitter.triggered.connect(self.quitter)
 
         self.actionRetourArriere = QtGui.QAction(parent=MainWindow)
         self.actionRetourArriere.setObjectName("actionRetourArriere")
@@ -170,6 +158,22 @@ class Ui_MainWindow(object):
         self.actionRetourAvant = QtGui.QAction(parent=MainWindow)
         self.actionRetourAvant.setObjectName("actionRetourAvant")
         self.actionRetourAvant.triggered.connect(self.retourAvant)
+
+        self.actionChangerRepertoire = QtGui.QAction(parent=MainWindow)
+        self.actionChangerRepertoire.setObjectName("actionChangerRepertoire")
+        self.actionChangerRepertoire.triggered.connect(self.changer_repertoire)
+        self.actionRecharger = QtGui.QAction(parent=MainWindow)
+        self.actionRecharger.setObjectName("actionRecharger")
+        self.actionRecharger.triggered.connect(self.refresh)
+        self.actionViderCorbeil = QtGui.QAction(parent=MainWindow)
+        self.actionViderCorbeil.setObjectName("actionViderCorbeil")
+        self.actionViderCorbeil.triggered.connect(self.clear_trash)
+        self.actionAfficherCorbeil = QtGui.QAction(parent=MainWindow)
+        self.actionAfficherCorbeil.setObjectName("actionAfficherCorbeil")
+        self.actionAfficherCorbeil.triggered.connect(self.goto_trash)
+        self.actionQuitter = QtGui.QAction(parent=MainWindow)
+        self.actionQuitter.setObjectName("actionQuitter")
+        self.actionQuitter.triggered.connect(self.quitter)
 
         self.menuFichier.addAction(self.actionRenommer)
         self.menuFichier.addAction(self.actionOuvrir)
@@ -179,14 +183,15 @@ class Ui_MainWindow(object):
         self.menuFichier.addAction(self.actionCreerDossier)
         self.menuFichier.addAction(self.actionCompresserZip)
         self.menuFichier.addAction(self.actionCompresserTar)
-        self.menuFichier.addAction(self.actionViderCorbeil)
-
-        self.menuExplorateur.addAction(self.actionChangerRepertoire)
-        self.menuExplorateur.addAction(self.actionRecharger)
-        self.menuExplorateur.addAction(self.actionQuitter)
 
         self.menuHistorique.addAction(self.actionRetourArriere)
         self.menuHistorique.addAction(self.actionRetourAvant)
+
+        self.menuExplorateur.addAction(self.actionChangerRepertoire)
+        self.menuExplorateur.addAction(self.actionRecharger)
+        self.menuExplorateur.addAction(self.actionViderCorbeil)
+        self.menuExplorateur.addAction(self.actionAfficherCorbeil)
+        self.menuExplorateur.addAction(self.actionQuitter)
 
         self.menubar.addAction(self.menuFichier.menuAction())
         self.menubar.addAction(self.menuHistorique.menuAction())
@@ -217,6 +222,7 @@ class Ui_MainWindow(object):
         self.actionCompresserZip.setText(_translate("MainWindow", "Compresser le dossier en archive zip"))
         self.actionCompresserTar.setText(_translate("MainWindow", "Compresser le dossier en archive tar"))
         self.actionViderCorbeil.setText(_translate("MainWindow", "Vider la corbeil"))
+        self.actionAfficherCorbeil.setText(_translate("MainWindow", "Afficher la corbeil"))
         self.actionQuitter.setText(_translate("MainWindow", "Quitter"))
         self.actionRecharger.setText(_translate("MainWindow", "Recharger"))
         self.actionChangerRepertoire.setText(_translate("MainWindow", "Changer de répertoire"))
@@ -354,21 +360,21 @@ class Ui_MainWindow(object):
         dialog = Ui_InputDialog(self, "creerDossier")
         dialog.exec()
 
-    def erreur(self, text):
-        dialog = Ui_MessageDialog(text)
+    def popup(self, type, text):
+        dialog = Ui_MessageDialog(type, text)
         dialog.exec()
 
     def action_compresser_zip(self):
         if self.explorateur.make_archive("zip"):
             self.refresh()
         else:
-            self.erreur("Seuls les dossiers peuvent être compressés")
+            self.popup("Erreur", "Seuls les dossiers peuvent être compressés")
 
     def action_compresser_tar(self):
         if self.explorateur.make_archive("gztar"):
             self.refresh()
         else:
-            self.erreur("Seuls les dossiers peuvent être compressés")
+            self.popup("Erreur", "Seuls les dossiers peuvent être compressés")
 
     def open_selected_element(self):
         if self.explorateur.open_selected_element():
@@ -376,3 +382,11 @@ class Ui_MainWindow(object):
 
     def clear_trash(self):
         os.system("rm -rf ~/.local/share/Trash/*")
+        self.explorateur.set_path(Path.home())
+        self.refresh()
+
+    def goto_trash(self):
+        if self.explorateur.set_path(self.explorateur.trash_path):
+            self.refresh()
+        else:
+            self.popup("Info", "Le dossier corbeil est vide")

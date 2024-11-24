@@ -69,6 +69,7 @@ class explorateur:
         self.fichiers = []
         self.index_fichier_selectionner = -1
         self.path = Path.home()
+        self.trash_path = str(self.path) + "/.local/share/Trash/files"
         self.historique = [str(self.path)]
         self.index_historique = 0
 
@@ -136,7 +137,11 @@ class explorateur:
             self.fichiers.pop(self.index_fichier_selectionner)
 
     def set_path(self, path: str):
-        self.path = path
+        if os.path.exists(path):
+            self.path = path
+            return True
+        return False
+
 
     def get_path(self):
         return self.path

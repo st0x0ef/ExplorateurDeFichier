@@ -11,8 +11,11 @@ import os
 
 
 class Ui_MessageDialog(QtWidgets.QDialog):
-    def __init__(self, message):
+    def __init__(self, type, message):
         super().__init__()
+
+        self.type = type
+
         self.setObjectName("MessageDialog")
         self.resize(400, 100)
         self.setWindowIcon(QtGui.QIcon(os.path.join(os.path.dirname(__file__), "ressources", "icon.png")))
@@ -33,5 +36,5 @@ class Ui_MessageDialog(QtWidgets.QDialog):
 
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
-        self.setWindowTitle(_translate("MessageDialog", "Erreur"))
+        self.setWindowTitle(_translate("MessageDialog", self.type))
         self.pushButton.setText(_translate("MessageDialog", "Continuer"))

@@ -70,10 +70,10 @@ class Ui_InputDialog(QtWidgets.QDialog):
                 if not os.path.exists(file_dest):
                     open(file_dest, "x")
                 else:
-                    self.interface.erreur("Un fichier portant le même nom existe déjà")
+                    self.interface.popup("Erreur", "Un fichier portant le même nom existe déjà")
                     return
             else:
-                self.interface.erreur("Seul les charactères -_.a-zA-Z0-9 peuvent être utilisé\ndans le nom du fichier")
+                self.interface.popup("Erreur", "Seul les charactères -_.a-zA-Z0-9 peuvent être utilisé\ndans le nom du fichier")
                 return
 
         elif self.dialogType == "creerDossier":
@@ -82,15 +82,15 @@ class Ui_InputDialog(QtWidgets.QDialog):
                 if not os.path.exists(path_dest):
                     os.makedirs(path_dest)
                 else:
-                    self.interface.erreur("Un dossier portant le même nom existe déjà")
+                    self.interface.popup("Erreur", "Un dossier portant le même nom existe déjà")
                     return
             else:
-                self.interface.erreur("Seul les charactères -_a-zA-Z0-9 peuvent être utilisé\ndans le nom du dossier")
+                self.interface.popup("Erreur", "Seul les charactères -_a-zA-Z0-9 peuvent être utilisé\ndans le nom du dossier")
                 return
 
         elif self.dialogType == "changeRepertoire":
             if not os.path.exists(self.lineEdit.text()):
-                self.interface.erreur("Le répertoire n'existe pas")
+                self.interface.popup("Erreur", "Le répertoire n'existe pas")
                 return
             self.interface.explorateur.set_path(self.lineEdit.text())
 
