@@ -275,6 +275,25 @@ class Ui_MainWindow(object):
 
         self.scrollArea.show()
 
+    def contextMenuEvent(self, event):
+        contextMenu = QtWidgets.QMenu(self)
+
+        if 0 <= self.explorateur.index_fichier_selectionner < len(self.widgets):
+            contextMenu.addAction(self.actionRenommer)
+            contextMenu.addAction(self.actionOuvrir)
+            contextMenu.addAction(self.actionOuvrirTerminal)
+            contextMenu.addAction(self.actionSupprimer)
+            contextMenu.addAction(self.actionCreerDocument)
+            contextMenu.addAction(self.actionCreerDossier)
+
+            if self.explorateur.get_files()[self.explorateur.index_fichier_selectionner][3] == "Dossier":
+                contextMenu.addAction(self.actionCompresserZip)
+                contextMenu.addAction(self.actionCompresserTar)
+
+            contextMenu.addAction(self.menuHistorique.menuAction())
+
+        contextMenu.exec(event.globalPos())
+
     def select(self, event: QtGui.QMouseEvent):
         pos = round(event.scenePosition().y() + self.scrollArea.verticalScrollBar().value() - 80)
         for i in range(len(self.widgets)):

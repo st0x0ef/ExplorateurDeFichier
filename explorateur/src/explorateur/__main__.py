@@ -6,9 +6,10 @@ from explorateur.Application import App
 
 
 class Window(QMainWindow, Ui_MainWindow):
-    def __init__(self, explorateur, parent=None):
+    def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self, app, explorateur)
+        self.show()
 
 
 if __name__ == "__main__":
@@ -17,7 +18,6 @@ if __name__ == "__main__":
 
     explorateur = explorateur()
 
-    win = Window(explorateur)
-    win.show()
+    win = Window()
 
     sys.exit(app.exec())
