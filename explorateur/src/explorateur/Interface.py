@@ -150,6 +150,9 @@ class Ui_MainWindow(object):
         self.actionCompresserTar = QtGui.QAction(parent=MainWindow)
         self.actionCompresserTar.setObjectName("actionCompresserTar")
         self.actionCompresserTar.triggered.connect(self.action_compresser_tar)
+        self.actionViderCorbeil = QtGui.QAction(parent=MainWindow)
+        self.actionViderCorbeil.setObjectName("actionViderCorbeil")
+        self.actionViderCorbeil.triggered.connect(self.clear_trash)
 
         self.actionChangerRepertoire = QtGui.QAction(parent=MainWindow)
         self.actionChangerRepertoire.setObjectName("actionChangerRepertoire")
@@ -176,6 +179,7 @@ class Ui_MainWindow(object):
         self.menuFichier.addAction(self.actionCreerDossier)
         self.menuFichier.addAction(self.actionCompresserZip)
         self.menuFichier.addAction(self.actionCompresserTar)
+        self.menuFichier.addAction(self.actionViderCorbeil)
 
         self.menuExplorateur.addAction(self.actionChangerRepertoire)
         self.menuExplorateur.addAction(self.actionRecharger)
@@ -212,6 +216,7 @@ class Ui_MainWindow(object):
         self.actionCreerDossier.setText(_translate("MainWindow", "Créer un dossier"))
         self.actionCompresserZip.setText(_translate("MainWindow", "Compresser le dossier en archive zip"))
         self.actionCompresserTar.setText(_translate("MainWindow", "Compresser le dossier en archive tar"))
+        self.actionViderCorbeil.setText(_translate("MainWindow", "Vider la corbeil"))
         self.actionQuitter.setText(_translate("MainWindow", "Quitter"))
         self.actionRecharger.setText(_translate("MainWindow", "Recharger"))
         self.actionChangerRepertoire.setText(_translate("MainWindow", "Changer de répertoire"))
@@ -368,3 +373,6 @@ class Ui_MainWindow(object):
     def open_selected_element(self):
         if self.explorateur.open_selected_element():
             self.refresh()
+
+    def clear_trash(self):
+        os.system("rm -rf ~/.local/share/Trash/*")
