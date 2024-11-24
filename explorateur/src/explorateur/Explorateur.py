@@ -4,6 +4,7 @@ import subprocess
 from pathlib import Path
 import shutil
 import magic
+import send2trash
 
 
 def find_size_in_good_unit(octets: int) -> tuple:
@@ -51,6 +52,8 @@ def find_file_type(path_entry: str) -> str:
         type_file = "Document PDF"
     elif type_file == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
         type_file = "Document Word"
+    elif type_file == "inode/x-empty":
+        type_file = "Fichier vide"
 
     type_file = type_file.replace("application/", "")
     type_file = type_file.replace("image/", "")
@@ -125,7 +128,7 @@ class explorateur:
 
     def delete_file(self):
         if self.index_fichier_selectionner >= 0:
-            os.remove(self.fichiers[self.index_fichier_selectionner][6])
+            send2trash.send2trash(str(self.fichiers[self.index_fichier_selectionner][6]))
 
             for i in range(len(self.fichiers) - self.index_fichier_selectionner):
                 self.fichiers[i][0] -= 1

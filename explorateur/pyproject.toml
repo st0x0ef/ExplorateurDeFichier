@@ -2,7 +2,7 @@
 [tool.briefcase]
 project_name = "Explorateur de fichier"
 bundle = "com.st0x0ef"
-version = "0.1.4"
+version = "0.2.0"
 url = "https://github.com/st0x0ef/"
 license.file = "LICENSE"
 author = "Gabriel Gaudreault"
@@ -23,7 +23,8 @@ test_sources = [
 
 requires = [
     "python-magic",
-    "PyQt6"
+    "PyQt6",
+    "send2trash"
 ]
 test_requires = [
     "pytest",
