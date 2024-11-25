@@ -180,6 +180,6 @@ class explorateur:
                     self.fichiers[self.index_fichier_selectionner][6]).replace(" ", r"\ "))
 
             else:
-                os.system("gnome-terminal --working-directory=" + str(self.path))
+                os.system("gnome-terminal --working-directory=" + str(self.path).replace(" ", r"\ "))
         else:
-            os.system("gnome-terminal --working-directory=" + str(self.path))
+            os.system("gnome-terminal --working-directory=" + str(self.path).replace(" ", r"\ "))
