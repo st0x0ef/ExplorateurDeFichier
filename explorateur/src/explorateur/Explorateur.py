@@ -20,20 +20,27 @@ class explorateur:
         self.fichiers.clear()
         self.index_fichier_selectionner = -1
 
-        i = 0
+        dossier = []
+        fichier = []
+
         with os.scandir(self.path) as it:
             for entry in it:
                 if not entry.name.startswith('.'):
                     if entry.is_dir():
-                        self.fichiers.append([i, entry.name, "", "Dossier", time.ctime(os.path.getmtime(entry.path)),
+                        dossier.append([0, entry.name, "", "Dossier", time.ctime(os.path.getmtime(entry.path)),
                                               time.ctime(os.path.getctime(entry.path)), entry.path])
                     else:
-                        self.fichiers.append(
-                            [i, entry.name, Method.find_size_in_good_unit(os.path.getsize(entry.path)),
+                        fichier.append(
+                            [0, entry.name, Method.find_size_in_good_unit(os.path.getsize(entry.path)),
                              Method.find_file_type(str(entry.path)),
                              time.ctime(os.path.getmtime(entry.path)), time.ctime(os.path.getctime(entry.path)),
                              entry.path])
-                    i += 1
+
+        self.fichiers = sorted(dossier, key=lambda x: x[3])
+        self.fichiers.extend(sorted(fichier, key=lambda x: x[3]))
+
+        for i in range(len(self.fichiers)):
+            self.fichiers[i][0] = i
 
     def get_files(self) -> []:
         return self.fichiers
