@@ -46,6 +46,8 @@ class Ui_MainWindow(object):
         self.scrollAreaWidget = QtWidgets.QWidget()
         self.scrollAreaWidget.setGeometry(QtCore.QRect(0, 60, 800, 500))
 
+        self.scrollArea.mousePressEvent = lambda event: self.select(event)
+
         self.widget = QtWidgets.QWidget(parent=self.scrollAreaWidget)
         self.widget.setGeometry(QtCore.QRect(0, 0, 800, 30))
         self.widget.setObjectName("widget")
@@ -254,7 +256,6 @@ class Ui_MainWindow(object):
             widget.setGeometry(QtCore.QRect(0, 30 * file[0], 800, 30))
             widget.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
             widget.setObjectName("widget_" + str(file[0]))
-            widget.mousePressEvent = lambda event: self.select(event)
             widget.mouseDoubleClickEvent = lambda event: self.open()
 
             nom = QtWidgets.QLabel(parent=widget)
@@ -289,7 +290,7 @@ class Ui_MainWindow(object):
     def contextMenuEvent(self, event):
         contextMenu = QtWidgets.QMenu(self)
 
-        if 0 <= self.explorateur.index_fichier_selectionner < len(self.widgets):
+        if self.selected_widget is not None:
             contextMenu.addAction(self.actionRenommer)
             contextMenu.addAction(self.actionOuvrir)
             contextMenu.addAction(self.actionOuvrirTerminal)
@@ -301,17 +302,28 @@ class Ui_MainWindow(object):
                 contextMenu.addAction(self.actionCompresserZip)
                 contextMenu.addAction(self.actionCompresserTar)
 
-            contextMenu.addAction(self.menuHistorique.menuAction())
+        else:
+            contextMenu.addAction(self.actionOuvrirTerminal)
+            contextMenu.addAction(self.actionSupprimer)
+            contextMenu.addAction(self.actionCreerDocument)
+            contextMenu.addAction(self.actionCreerDossier)
+
+        contextMenu.addAction(self.menuHistorique.menuAction())
 
         contextMenu.exec(event.globalPos())
 
     def select(self, event: QtGui.QMouseEvent):
         pos = round(event.scenePosition().y() + self.scrollArea.verticalScrollBar().value() - 80)
+        element_selected = False
         for i in range(len(self.widgets)):
-            if pos - 30 < self.widgets[i].y() < pos:
+            if not element_selected and pos - 30 < self.widgets[i].y() < pos:
                 self.selectIndex(i)
+                element_selected = True
             else:
                 self.unselectIndex(i)
+        if not element_selected:
+            self.unselectIndex(self.explorateur.index_fichier_selectionner)
+            self.selected_widget = None
 
     def selectIndex(self, index: int):
         if 0 <= index < len(self.widgets):
