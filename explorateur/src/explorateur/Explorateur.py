@@ -3,65 +3,8 @@ import time
 import subprocess
 from pathlib import Path
 import shutil
-import magic
 import send2trash
-
-
-def find_size_in_good_unit(octets: int) -> tuple:
-    i = 0
-    while octets / 1024 >= 1:
-        octets /= 1024
-        i += 1
-        if i > 5:
-            print("Le fichier est trop gros")
-            return octets * 1024, 5
-    return octets, convert_number_to_size_units(i)
-
-
-def convert_number_to_size_units(nb: int) -> str:
-    match nb:
-        case 0:
-            return "o"
-        case 1:
-            return "ko"
-        case 2:
-            return "mo"
-        case 3:
-            return "go"
-        case 4:
-            return "to"
-        case 5:
-            return "po"
-        case _:
-            return ""
-
-
-def convert_number_to_octet(nb: float, unit: int) -> float:
-    while unit > 0:
-        nb *= 1024
-        unit -= 1
-    return nb
-
-
-def find_file_type(path_entry: str) -> str:
-    type_file = magic.from_file(path_entry, mime=True)
-
-    if type_file == "text/plain":
-        type_file = "Document texte"
-    elif type_file == "application/pdf":
-        type_file = "Document PDF"
-    elif type_file == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
-        type_file = "Document Word"
-    elif type_file == "inode/x-empty":
-        type_file = "Fichier vide"
-
-    type_file = type_file.replace("application/", "")
-    type_file = type_file.replace("image/", "")
-    type_file = type_file.replace("text/", "")
-
-    type_file = type_file.capitalize()
-
-    return type_file
+from explorateur import Method
 
 
 class explorateur:
@@ -86,8 +29,8 @@ class explorateur:
                                               time.ctime(os.path.getctime(entry.path)), entry.path])
                     else:
                         self.fichiers.append(
-                            [i, entry.name, find_size_in_good_unit(os.path.getsize(entry.path)),
-                             find_file_type(str(entry.path)),
+                            [i, entry.name, Method.find_size_in_good_unit(os.path.getsize(entry.path)),
+                             Method.find_file_type(str(entry.path)),
                              time.ctime(os.path.getmtime(entry.path)), time.ctime(os.path.getctime(entry.path)),
                              entry.path])
                     i += 1
