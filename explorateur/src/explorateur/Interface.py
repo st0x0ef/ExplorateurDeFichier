@@ -321,6 +321,7 @@ class Ui_MainWindow(object):
             contextMenu.addAction(self.actionSupprimer)
             contextMenu.addAction(self.actionCreerDocument)
             contextMenu.addAction(self.actionCreerDossier)
+            contextMenu.addAction(self.actionColler)
 
         contextMenu.exec(event.globalPos())
 
