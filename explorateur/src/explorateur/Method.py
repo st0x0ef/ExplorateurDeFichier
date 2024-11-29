@@ -37,8 +37,11 @@ def changer_repertoire():
 
 
 def renommer_element():
-    dialog = Ui_InputDialog(interface, "renommer")
-    dialog.exec()
+    if len(explorateur.get_selected_files()) == 1:
+        dialog = Ui_InputDialog(interface, "renommer")
+        dialog.exec()
+    else:
+        popup("Erreur", "Veuillez sélectionner un seul élément")
 
 
 def retourArriere():
