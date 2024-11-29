@@ -45,7 +45,7 @@ class Ui_InputDialog(QtWidgets.QDialog):
                     _translate("Dialog", "Entrez le répertoire auquel vous souhaitez accéder"))
             case "renommer":
                 self.setWindowTitle(_translate("Dialog", "Renommer un élément"))
-                self.lineEdit.setText(_translate("Dialog", str(self.interface.explorateur.get_selected_file()[1])))
+                self.lineEdit.setText(_translate("Dialog", str(self.interface.explorateur.get_selected_files()[1])))
                 self.lineEdit.setPlaceholderText(_translate("Dialog", "Entrez le nouveau nom du document"))
             case "creerDocument":
                 self.setWindowTitle(_translate("Dialog", "Créer un document"))

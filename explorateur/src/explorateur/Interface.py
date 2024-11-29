@@ -175,6 +175,12 @@ class Ui_MainWindow(object):
         self.actionAfficherCorbeil = QtGui.QAction(parent=MainWindow)
         self.actionAfficherCorbeil.setObjectName("actionAfficherCorbeil")
         self.actionAfficherCorbeil.triggered.connect(Method.goto_trash)
+        self.actionCopier = QtGui.QAction(parent=MainWindow)
+        self.actionCopier.setObjectName("actionCopier")
+        self.actionCopier.triggered.connect(self.explorateur.copy_selected_elements)
+        self.actionColler = QtGui.QAction(parent=MainWindow)
+        self.actionColler.setObjectName("actionColler")
+        self.actionColler.triggered.connect(Method.paste_file)
         self.actionQuitter = QtGui.QAction(parent=MainWindow)
         self.actionQuitter.setObjectName("actionQuitter")
         self.actionQuitter.triggered.connect(Method.quitter)
@@ -193,6 +199,8 @@ class Ui_MainWindow(object):
 
         self.menuExplorateur.addAction(self.actionChangerRepertoire)
         self.menuExplorateur.addAction(self.actionRecharger)
+        self.menuExplorateur.addAction(self.actionCopier)
+        self.menuExplorateur.addAction(self.actionColler)
         self.menuExplorateur.addAction(self.actionViderCorbeil)
         self.menuExplorateur.addAction(self.actionAfficherCorbeil)
         self.menuExplorateur.addAction(self.actionQuitter)
@@ -234,6 +242,8 @@ class Ui_MainWindow(object):
         self.actionChangerRepertoire.setText(_translate("MainWindow", "Changer de répertoire"))
         self.actionRetourArriere.setText(_translate("MainWindow", "Retour arrière"))
         self.actionRetourAvant.setText(_translate("MainWindow", "Retour avant"))
+        self.actionCopier.setText(_translate("MainWindow", "Copier"))
+        self.actionColler.setText(_translate("MainWindow", "Coller"))
 
     def refresh(self):
         self.scrollArea.hide()
@@ -297,10 +307,14 @@ class Ui_MainWindow(object):
             contextMenu.addAction(self.actionSupprimer)
             contextMenu.addAction(self.actionCreerDocument)
             contextMenu.addAction(self.actionCreerDossier)
+            contextMenu.addAction(self.actionCopier)
+            contextMenu.addAction(self.actionColler)
 
-            if self.explorateur.get_files()[self.explorateur.index_fichier_selectionner][3] == "Dossier":
-                contextMenu.addAction(self.actionCompresserZip)
-                contextMenu.addAction(self.actionCompresserTar)
+            for fichier in self.explorateur.get_selected_files():
+                if fichier[3] == "Dossier":
+                    contextMenu.addAction(self.actionCompresserZip)
+                    contextMenu.addAction(self.actionCompresserTar)
+                    break
 
         else:
             contextMenu.addAction(self.actionOuvrirTerminal)
@@ -315,17 +329,17 @@ class Ui_MainWindow(object):
         element_selected = False
         for i in range(len(self.widgets)):
             if not element_selected and pos - 30 < self.widgets[i].y() < pos:
-                self.selectIndex(i)
+                self.selectIndex(i, True)
                 element_selected = True
             else:
                 self.unselectIndex(i)
         if not element_selected:
             self.selected_widget = None
 
-    def selectIndex(self, index: int):
+    def selectIndex(self, index: int, clear):
         if 0 <= index < len(self.widgets):
             self.widgets[index].setStyleSheet('background-color: #8ceaff;')
-            self.explorateur.select_file(index, True)
+            self.explorateur.select_file(index, clear)
             self.selected_widget = self.widgets[index]
 
     def unselectIndex(self, index: int):

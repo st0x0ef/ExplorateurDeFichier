@@ -13,7 +13,7 @@ class keyboard:
                 last_element = self.explorateur.index_fichier_selectionner[-1]
                 if modifiers != QtCore.Qt.KeyboardModifier.ShiftModifier and len(self.explorateur.index_fichier_selectionner) > 0:
                     self.explorateur.index_fichier_selectionner.clear()
-                self.interface.selectIndex(last_element - 1)
+                self.interface.selectIndex(last_element - 1, False)
                 for i in range(len(self.interface.widgets)):
                     if self.explorateur.index_fichier_selectionner.count(i) == 0:
                         self.interface.unselectIndex(i)
@@ -23,7 +23,7 @@ class keyboard:
                 last_element = self.explorateur.index_fichier_selectionner[-1]
                 if modifiers != QtCore.Qt.KeyboardModifier.ShiftModifier and len(self.explorateur.index_fichier_selectionner) > 0:
                     self.explorateur.index_fichier_selectionner.clear()
-                self.interface.selectIndex(last_element + 1)
+                self.interface.selectIndex(last_element + 1, False)
                 for i in range(len(self.interface.widgets)):
                     if self.explorateur.index_fichier_selectionner.count(i) == 0:
                         self.interface.unselectIndex(i)

@@ -63,14 +63,14 @@ class explorateur:
                 self.historique.append(str(self.path))
                 self.index_historique = len(self.historique) - 1
 
-    def get_selected_file(self) -> []:
+    def get_selected_files(self) -> []:
         fichier_selectionner = []
         for i in self.index_fichier_selectionner:
             fichier_selectionner.append(self.fichiers[i])
         return fichier_selectionner
 
     def open_selected_element(self):
-        for fichier in self.get_selected_file():
+        for fichier in self.get_selected_files():
             if fichier[3] == "Dossier":
                 self.open_selected_folder()
                 return True
@@ -82,7 +82,7 @@ class explorateur:
         return False
 
     def delete_file(self):
-        for fichier in self.get_selected_file():
+        for fichier in self.get_selected_files():
             send2trash.send2trash(str(fichier[6]))
         self.reload()
 
@@ -114,7 +114,7 @@ class explorateur:
             Method.popup("Erreur", "Vous ne pouvez renommer qu'un seul élément à la fois")
 
     def make_archive(self, type: str):
-        for fichier in self.get_selected_file():
+        for fichier in self.get_selected_files():
             if fichier[3] == "Dossier":
                 shutil.make_archive(str(fichier[6]), type, root_dir=fichier[6])
                 return True
@@ -123,7 +123,7 @@ class explorateur:
 
     def copy_selected_elements(self):
         self.fichiers_copier.clear()
-        for fichier in self.get_selected_file():
+        for fichier in self.get_selected_files():
             self.fichiers_copier.append(str(fichier[6]))
 
     def paste_file(self):
@@ -136,7 +136,7 @@ class explorateur:
 
     def open_terminal(self):
         if len(self.index_fichier_selectionner) > 0:
-            for fichier in self.get_selected_file():
+            for fichier in self.get_selected_files():
                 if fichier[3] == "Dossier":
                     os.system("gnome-terminal --working-directory=" + str(fichier[6]).replace(" ", r"\ "))
                     return True
