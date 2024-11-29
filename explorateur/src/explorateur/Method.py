@@ -153,3 +153,7 @@ def find_file_type(path_entry: str) -> str:
     type_file = type_file.capitalize()
 
     return type_file
+
+def paste_file():
+    explorateur.paste_file()
+    interface.refresh()

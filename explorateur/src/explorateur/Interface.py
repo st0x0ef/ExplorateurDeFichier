@@ -43,6 +43,11 @@ class Ui_MainWindow(object):
         self.scrollAreaWidget = QtWidgets.QWidget()
         self.scrollAreaWidget.setGeometry(QtCore.QRect(0, 60, 800, 500))
 
+        self.spacer = QtWidgets.QSpacerItem(800, 0, QtWidgets.QSizePolicy.Policy.Expanding,
+                                            QtWidgets.QSizePolicy.Policy.Minimum)
+        self.scrollAreaWidgetLayout = QtWidgets.QVBoxLayout(self.scrollAreaWidget)
+        self.scrollAreaWidgetLayout.addItem(self.spacer)
+
         self.scrollArea.mousePressEvent = lambda event: self.select(event)
 
         self.widget = QtWidgets.QWidget(parent=self.scrollAreaWidget)
@@ -200,6 +205,8 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
         self.refresh()
+        self.scrollAreaWidget.setStyleSheet('background-color: none;')
+
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -231,22 +238,18 @@ class Ui_MainWindow(object):
     def refresh(self):
         self.scrollArea.hide()
         self.explorateur.reload()
+
         fichiers = self.explorateur.get_files()
 
         self.repertoire.setText("Répertoire : " + str(self.explorateur.get_path()))
 
-        if len(self.widgets) == 0:
-            self.spacer = QtWidgets.QSpacerItem(800, 30 * len(fichiers), QtWidgets.QSizePolicy.Policy.Expanding,
-                                                QtWidgets.QSizePolicy.Policy.Minimum)
-            self.scrollAreaWidgetLayout = QtWidgets.QVBoxLayout(self.scrollAreaWidget)
-            self.scrollAreaWidgetLayout.addItem(self.spacer)
-        else:
-            self.spacer.changeSize(800, 30 * len(fichiers), QtWidgets.QSizePolicy.Policy.Expanding,
-                                   QtWidgets.QSizePolicy.Policy.Minimum)
-            for widget in self.widgets:
-                widget.setVisible(False)
-                widget.destroy()
-            self.widgets.clear()
+        self.spacer.changeSize(800, 30 * len(fichiers), QtWidgets.QSizePolicy.Policy.Expanding,
+                              QtWidgets.QSizePolicy.Policy.Minimum)
+
+        for widget in self.widgets:
+            widget.setVisible(False)
+            widget.destroy()
+        self.widgets.clear()
 
         for file in fichiers:
             widget = QtWidgets.QWidget(parent=self.scrollAreaWidget)
@@ -305,8 +308,6 @@ class Ui_MainWindow(object):
             contextMenu.addAction(self.actionCreerDocument)
             contextMenu.addAction(self.actionCreerDossier)
 
-        contextMenu.addAction(self.menuHistorique.menuAction())
-
         contextMenu.exec(event.globalPos())
 
     def select(self, event: QtGui.QMouseEvent):
@@ -319,13 +320,12 @@ class Ui_MainWindow(object):
             else:
                 self.unselectIndex(i)
         if not element_selected:
-            self.unselectIndex(self.explorateur.index_fichier_selectionner)
             self.selected_widget = None
 
     def selectIndex(self, index: int):
         if 0 <= index < len(self.widgets):
             self.widgets[index].setStyleSheet('background-color: #8ceaff;')
-            self.explorateur.select_file(index)
+            self.explorateur.select_file(index, True)
             self.selected_widget = self.widgets[index]
 
     def unselectIndex(self, index: int):
