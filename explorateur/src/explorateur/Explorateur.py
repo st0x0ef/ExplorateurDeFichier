@@ -123,10 +123,15 @@ class explorateur:
 
     def copy_selected_elements(self):
         self.fichiers_copier.clear()
+        if len(self.get_selected_files()) == 0:
+            Method.popup("Erreur", "Aucun fichier sélectionner")
         for fichier in self.get_selected_files():
             self.fichiers_copier.append(str(fichier[6]))
 
     def paste_file(self):
+        if len(self.fichiers_copier) == 0:
+            Method.popup("Erreur", "Aucun fichier à coller")
+
         for fichier in self.fichiers_copier:
             if os.path.exists(str(self.path) + "/" + fichier.split("/")[-1]):
                 Method.popup("Erreur", "Un fichier portant le même nom existe déjà")
