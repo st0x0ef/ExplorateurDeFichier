@@ -1,6 +1,7 @@
 import sys
 import os
 import magic
+import threading
 from pathlib import Path
 from explorateur.InputDialog import Ui_InputDialog
 from explorateur.MessageDialog import Ui_MessageDialog
@@ -41,7 +42,7 @@ def renommer_element():
         dialog = Ui_InputDialog(interface, "renommer")
         dialog.exec()
     else:
-        popup("Erreur", "Veuillez sélectionner un seul élément")
+        message("Erreur", "Veuillez sélectionner un seul élément")
 
 
 def retourArriere():
@@ -64,23 +65,27 @@ def creer_dossier():
     dialog.exec()
 
 
-def popup(type, text):
+def message(type, text):
+    threading.Thread(target=message_thread, args=(type, text)).start()
+
+
+def message_thread(type, text):
     dialog = Ui_MessageDialog(type, text)
     dialog.exec()
 
-
-def action_compresser_zip():
-    if explorateur.make_archive("zip"):
-        interface.refresh()
+def compresser(algorithm: str):
+    if explorateur.make_archive(algorithm):
+        message("Info", "La compression de votre fichier est terminé")
     else:
-        popup("Erreur", "Seuls les dossiers peuvent être compressés")
+        message("Erreur", "Seuls les dossiers peuvent être compressés")
 
 
 def action_compresser_tar():
-    if explorateur.make_archive("gztar"):
-        interface.refresh()
-    else:
-        popup("Erreur", "Seuls les dossiers peuvent être compressés")
+    threading.Thread(target=compresser, args=("gztar",)).start()
+
+
+def action_compresser_zip():
+    threading.Thread(target=compresser, args=("zip",)).start()
 
 
 def open_selected_element():
@@ -98,7 +103,7 @@ def goto_trash():
     if explorateur.set_path(explorateur.trash_path):
         interface.refresh()
     else:
-        popup("Info", "Le dossier corbeil est vide")
+        message("Info", "Le dossier corbeil est vide")
 
 
 def find_size_in_good_unit(octets: int) -> tuple:
@@ -156,6 +161,7 @@ def find_file_type(path_entry: str) -> str:
     type_file = type_file.capitalize()
 
     return type_file
+
 
 def paste_file():
     explorateur.paste_file()

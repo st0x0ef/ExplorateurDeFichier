@@ -111,12 +111,13 @@ class explorateur:
             self.fichiers[self.index_fichier_selectionner[0]][1] = new_name
             self.fichiers[self.index_fichier_selectionner[0]][6] = str(self.path) + "/" + new_name
         else:
-            Method.popup("Erreur", "Vous ne pouvez renommer qu'un seul élément à la fois")
+            Method.message("Erreur", "Vous ne pouvez renommer qu'un seul élément à la fois")
 
-    def make_archive(self, type: str):
+    def make_archive(self, algo: str):
         for fichier in self.get_selected_files():
             if fichier[3] == "Dossier":
-                shutil.make_archive(str(fichier[6]), type, root_dir=fichier[6])
+                Method.message("Info", "La compression de votre fichier à été commencer\nen arrière plan.\nCette action peut prendre un certain temps")
+                shutil.make_archive(str(fichier[6]), algo, root_dir=fichier[6])
                 return True
             else:
                 return False
@@ -124,17 +125,17 @@ class explorateur:
     def copy_selected_elements(self):
         self.fichiers_copier.clear()
         if len(self.get_selected_files()) == 0:
-            Method.popup("Erreur", "Aucun fichier sélectionner")
+            Method.message("Erreur", "Aucun fichier sélectionner")
         for fichier in self.get_selected_files():
             self.fichiers_copier.append(str(fichier[6]))
 
     def paste_file(self):
         if len(self.fichiers_copier) == 0:
-            Method.popup("Erreur", "Aucun fichier à coller")
+            Method.message("Erreur", "Aucun fichier à coller")
 
         for fichier in self.fichiers_copier:
             if os.path.exists(str(self.path) + "/" + fichier.split("/")[-1]):
-                Method.popup("Erreur", "Un fichier portant le même nom existe déjà")
+                Method.message("Erreur", "Un fichier portant le même nom existe déjà")
             else:
                 shutil.copy(fichier, str(self.path))
                 self.reload()
