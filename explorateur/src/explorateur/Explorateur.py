@@ -5,6 +5,7 @@ from pathlib import Path
 import shutil
 import send2trash
 from explorateur import Method
+import threading
 
 
 class explorateur:
@@ -130,6 +131,10 @@ class explorateur:
             self.fichiers_copier.append(str(fichier[6]))
 
     def paste_file(self):
+        Method.message("Info", "Collage de votre fichier en arrière plan.\nCette action peut prendre un certain temps")
+        threading.Thread(target=self.paste_file_thread).start()
+
+    def paste_file_thread(self):
         if len(self.fichiers_copier) == 0:
             Method.message("Erreur", "Aucun fichier à coller")
 
@@ -137,8 +142,13 @@ class explorateur:
             if os.path.exists(str(self.path) + "/" + fichier.split("/")[-1]):
                 Method.message("Erreur", "Un fichier portant le même nom existe déjà")
             else:
-                shutil.copy(fichier, str(self.path))
+                if os.path.isdir(fichier):
+                    shutil.copytree(fichier, str(self.path) + "/" + fichier.split("/")[-1])
+                else:
+                    shutil.copy2(fichier, str(self.path))
                 self.reload()
+
+        Method.message("Info", "Collage terminer")
 
     def open_terminal(self):
         if len(self.index_fichier_selectionner) > 0:
