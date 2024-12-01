@@ -50,6 +50,8 @@ class App(QtWidgets.QApplication):
         self.eventSet = False
         self.keyboardInstance = None
         self.keyPressed = []
+        self.checkThreadTimer = QtCore.QTimer()
+        self.checkThreadTimer.setInterval(1000)
 
     def setEvent(self, keyboardInstance):
         self.keyboardInstance = keyboardInstance

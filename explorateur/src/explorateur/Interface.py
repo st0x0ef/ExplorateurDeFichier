@@ -18,6 +18,7 @@ class Ui_MainWindow(object):
         self.widgets = []
         self.selected_widget = None
         self.app.setEvent(keyboard(self, self.explorateur))
+        self.actualElementsDisplayed = []
 
         Method.init(self, self.explorateur)
 
@@ -209,11 +210,17 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuHistorique.menuAction())
         self.menubar.addAction(self.menuExplorateur.menuAction())
 
+        self.refresh()
+        self.centralwidget.setStyleSheet('background-color: none;')
+
+        self.checkThreadTimer = QtCore.QTimer()
+        self.checkThreadTimer.timeout.connect(self.refresh)
+        self.checkThreadTimer.start(5000)
+
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-        self.refresh()
-        self.scrollAreaWidget.setStyleSheet('background-color: none;')
+
 
 
     def retranslateUi(self, MainWindow):
@@ -246,10 +253,12 @@ class Ui_MainWindow(object):
         self.actionColler.setText(_translate("MainWindow", "Coller"))
 
     def refresh(self):
-        self.scrollArea.hide()
-        self.explorateur.reload()
-
         fichiers = self.explorateur.get_files()
+
+        if sorted(fichiers) == sorted(self.actualElementsDisplayed):
+            return
+
+        self.scrollArea.hide()
 
         self.repertoire.setText("Répertoire : " + str(self.explorateur.get_path()))
 
@@ -296,6 +305,7 @@ class Ui_MainWindow(object):
             self.widgets.append(widget)
 
         self.scrollArea.show()
+        self.actualElementsDisplayed = fichiers.copy()
 
     def contextMenuEvent(self, event):
         contextMenu = QtWidgets.QMenu(self)

@@ -37,7 +37,6 @@ class explorateur:
                              Method.find_file_type(str(entry.path)),
                              time.ctime(os.path.getmtime(entry.path)), time.ctime(os.path.getctime(entry.path)),
                              entry.path])
-
         self.fichiers = sorted(dossier, key=lambda x: x[3])
         self.fichiers.extend(sorted(fichier, key=lambda x: x[3]))
 
@@ -45,6 +44,7 @@ class explorateur:
             self.fichiers[i][0] = i
 
     def get_files(self) -> []:
+        self.reload()
         return self.fichiers
 
     def select_file(self, index: int, clear: bool):
