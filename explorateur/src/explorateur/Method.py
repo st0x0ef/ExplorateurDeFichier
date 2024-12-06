@@ -27,9 +27,8 @@ def quitter():
 
 
 def delete_file():
-    if interface.selected_widget is not None:
-        explorateur.delete_file()
-        interface.refresh()
+    explorateur.delete_file()
+    interface.refresh()
 
 
 def changer_repertoire():
